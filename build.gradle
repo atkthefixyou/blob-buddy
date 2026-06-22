@@ -8,14 +8,17 @@ group = project.maven_group
 
 repositories {
     mavenCentral()
-    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    implementation "software.bernie.geckolib:geckolib-fabric-${project.minecraft_version}:5.5.1"
+    implementation "software.bernie.geckolib:geckolib-fabric:5.5.1"
 }
 
 java {
