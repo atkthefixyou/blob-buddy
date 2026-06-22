@@ -2,19 +2,20 @@ package com.blobbuddy.entity;
 
 import com.blobbuddy.BlobBuddyMod;
 import com.geckolib.model.GeoModel;
-import net.minecraft.resources.ResourceLocation;
+import com.geckolib.renderer.GeoRenderState;
+import net.minecraft.resources.Identifier;
 
 public class BlobEntityModel extends GeoModel<BlobEntity> {
     @Override
-    public ResourceLocation getModelResource(BlobEntity entity) {
-        return ResourceLocation.fromNamespaceAndPath(BlobBuddyMod.MOD_ID, "geo/blob.geo.json");
+    public Identifier getModelResource(BlobEntity entity) {
+        return Identifier.of(BlobBuddyMod.MOD_ID, "geo/blob.geo.json");
     }
     @Override
-    public ResourceLocation getTextureResource(BlobEntity entity) {
-        return ResourceLocation.fromNamespaceAndPath(BlobBuddyMod.MOD_ID, "textures/entity/blob_neutral.png");
+    public Identifier getTextureResource(GeoRenderState state) {
+        return Identifier.of(BlobBuddyMod.MOD_ID, "textures/entity/blob_neutral.png");
     }
     @Override
-    public ResourceLocation getAnimationResource(BlobEntity entity) {
-        return ResourceLocation.fromNamespaceAndPath(BlobBuddyMod.MOD_ID, "animations/blob.animation.json");
+    public Identifier getAnimationResource(BlobEntity entity) {
+        return Identifier.of(BlobBuddyMod.MOD_ID, "animations/blob.animation.json");
     }
 }

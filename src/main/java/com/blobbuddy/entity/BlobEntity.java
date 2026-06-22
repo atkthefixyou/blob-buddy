@@ -5,9 +5,8 @@ import com.geckolib.animatable.GeoEntity;
 import com.geckolib.animatable.instance.AnimatableInstanceCache;
 import com.geckolib.animation.*;
 import com.geckolib.util.GeckoLibUtil;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -41,7 +40,7 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "mood_controller", 5, state ->
+        controllers.add(new AnimationController<BlobEntity>(this, "mood_controller", 5, state ->
             switch (currentMood) {
                 case HAPPY   -> state.setAndContinue(ANIM_HAPPY);
                 case ANGRY   -> state.setAndContinue(ANIM_ANGRY);
@@ -58,12 +57,12 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if (pendingResponse != null && !level().isClientSide()) {
+        if (pendingResponse != null && level() instanceof ServerLevel) {
             sendMessageNearby(pendingResponse);
             pendingResponse = null;
         }
-        if (currentMood == Mood.ANGRY && !level().isClientSide()) {
-            if (++angerTimer > 40) { attackNearestPlayer(); angerTimer = 0; }
+        if (currentMood == Mood.ANGRY && level() instanceof ServerLevel sl) {
+            if (++angerTimer > 40) { attackNearestPlayer(sl); angerTimer = 0; }
         }
     }
 
@@ -78,10 +77,10 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
             .forEach(p -> p.sendSystemMessage(Component.literal("§d[Blob] §f" + text)));
     }
 
-    private void attackNearestPlayer() {
+    private void attackNearestPlayer(ServerLevel sl) {
         Player nearest = level().getNearestPlayer(this, 8.0);
         if (nearest != null) {
-            doHurtTarget(getServerLevel(), nearest);
+            doHurtTarget(sl, nearest);
             sendMessageNearby("DO NGOC! Nhan dam nay di!");
         }
     }
@@ -89,14 +88,16 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
     public Mood getCurrentMood() { return currentMood; }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag, HolderLookup.Provider provider) {
-        super.addAdditionalSaveData(tag, provider);
-        tag.putString("mood", currentMood.name());
+    public void saveAdditionalSaveData(net.minecraft.nbt.ValueOutput output) {
+        super.saveAdditionalSaveData(output);
+        output.putString("mood", currentMood.name());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag, HolderLookup.Provider provider) {
-        super.readAdditionalSaveData(tag, provider);
-        if (tag.contains("mood")) currentMood = Mood.valueOf(tag.getString("mood").orElse("NEUTRAL"));
+    public void loadAdditionalSaveData(net.minecraft.nbt.ValueInput input) {
+        super.loadAdditionalSaveData(input);
+        input.read("mood", net.minecraft.nbt.Tag.TYPE).ifPresent(t ->
+            currentMood = Mood.valueOf(t.getAsString())
+        );
     }
 }
