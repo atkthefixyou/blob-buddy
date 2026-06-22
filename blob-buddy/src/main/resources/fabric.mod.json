@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "blob-buddy",
+  "version": "1.0.0",
+  "name": "BlobBuddy",
+  "description": "Cục tròn có AI, biết nói chuyện và có cảm xúc",
+  "authors": ["Phú"],
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.blobbuddy.BlobBuddyMod"],
+    "client": ["com.blobbuddy.BlobClientMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "fabric-api": "*",
+    "minecraft": "~26.1.2"
+  }
+}
