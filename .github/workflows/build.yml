@@ -19,23 +19,17 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
 
-      - name: Cache Gradle
-        uses: actions/cache@v4
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-
-      - name: Grant execute permission
-        run: chmod +x gradlew
+          gradle-version: '9.4.0'
 
       - name: Build mod
-        run: ./gradlew build --no-daemon
+        run: gradle build --no-daemon
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: blob-buddy-${{ github.run_number }}
-          path: build/libs/*-dev.jar
+          path: build/libs/*.jar
           if-no-files-found: error
