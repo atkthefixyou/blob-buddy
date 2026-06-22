@@ -1,18 +1,18 @@
 package com.blobbuddy.entity;
 
 import com.blobbuddy.BlobBuddyMod;
-import com.geckolib.renderer.GeoEntityRenderer;
-import com.geckolib.renderer.GeoRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoRenderState;
 
-public class BlobEntityRenderer extends GeoEntityRenderer<BlobEntity, GeoRenderState> {
+public class BlobEntityRenderer extends GeoEntityRenderer<BlobEntity> {
     public BlobEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx, new BlobEntityModel());
     }
+
     @Override
-    public Identifier getTextureLocation(GeoRenderState state) {
-        BlobEntity entity = (BlobEntity) state.entity();
+    public ResourceLocation getTextureLocation(BlobEntity entity) {
         String name = switch (entity.getCurrentMood()) {
             case HAPPY   -> "blob_happy";
             case ANGRY   -> "blob_angry";
@@ -20,6 +20,6 @@ public class BlobEntityRenderer extends GeoEntityRenderer<BlobEntity, GeoRenderS
             case EXCITED -> "blob_excited";
             default      -> "blob_neutral";
         };
-        return Identifier.of(BlobBuddyMod.MOD_ID, "textures/entity/" + name + ".png");
+        return ResourceLocation.fromNamespaceAndPath(BlobBuddyMod.MOD_ID, "textures/entity/" + name + ".png");
     }
 }

@@ -1,10 +1,6 @@
 package com.blobbuddy.entity;
 
 import com.blobbuddy.mood.Mood;
-import com.geckolib.animatable.GeoEntity;
-import com.geckolib.animatable.instance.AnimatableInstanceCache;
-import com.geckolib.animation.*;
-import com.geckolib.util.GeckoLibUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -13,6 +9,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class BlobEntity extends PathfinderMob implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -40,7 +40,7 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<BlobEntity>(this, "mood_controller", 5, state ->
+        controllers.add(new AnimationController<>("mood_controller", state ->
             switch (currentMood) {
                 case HAPPY   -> state.setAndContinue(ANIM_HAPPY);
                 case ANGRY   -> state.setAndContinue(ANIM_ANGRY);
@@ -88,16 +88,14 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
     public Mood getCurrentMood() { return currentMood; }
 
     @Override
-    public void saveAdditionalSaveData(net.minecraft.nbt.ValueOutput output) {
-        super.saveAdditionalSaveData(output);
-        output.putString("mood", currentMood.name());
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putString("mood", currentMood.name());
     }
 
     @Override
-    public void loadAdditionalSaveData(net.minecraft.nbt.ValueInput input) {
-        super.loadAdditionalSaveData(input);
-        input.read("mood", net.minecraft.nbt.Tag.TYPE).ifPresent(t ->
-            currentMood = Mood.valueOf(t.getAsString())
-        );
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("mood")) currentMood = Mood.valueOf(tag.getString("mood"));
     }
 }

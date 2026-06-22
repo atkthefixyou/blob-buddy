@@ -5,7 +5,6 @@ import com.blobbuddy.ai.VoiceCapture;
 import com.blobbuddy.entity.BlobEntity;
 import com.blobbuddy.entity.BlobEntityRenderer;
 import com.blobbuddy.network.BlobPackets;
-import com.geckolib.GeckoLib;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -13,6 +12,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.world.entity.Entity;
 import org.lwjgl.glfw.GLFW;
+import software.bernie.geckolib.GeckoLib;
 
 public class BlobClientMod implements ClientModInitializer {
     private static KeyMapping talkKey;
@@ -22,11 +22,10 @@ public class BlobClientMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         GeckoLib.initialize();
-        EntityRendererRegistry.register(BlobBuddyMod.BLOB_ENTITY,
-            ctx -> new BlobEntityRenderer(ctx));
+        EntityRendererRegistry.register(BlobBuddyMod.BLOB_ENTITY, BlobEntityRenderer::new);
 
         talkKey = new KeyMapping("key.blob-buddy.talk",
-            GLFW.GLFW_KEY_V, KeyMapping.Category.MISC);
+            GLFW.GLFW_KEY_V, "key.categories.misc");
 
         ClientPlayNetworking.registerGlobalReceiver(
             BlobPackets.AIResponsePacket.TYPE,
