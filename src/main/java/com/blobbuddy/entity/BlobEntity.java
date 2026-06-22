@@ -1,6 +1,7 @@
 package com.blobbuddy.entity;
 
 import com.blobbuddy.mood.Mood;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -74,7 +75,7 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
     private void sendMessageNearby(String text) {
         level().players().stream()
             .filter(p -> distanceTo(p) < 16)
-            .forEach(p -> p.sendSystemMessage(Component.literal("§d[Blob] §f" + text)));
+            .forEach(p -> p.sendSystemMessage(Component.literal("\u00a7d[Blob] \u00a7f" + text)));
     }
 
     private void attackNearestPlayer(ServerLevel sl) {
@@ -88,14 +89,20 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
     public Mood getCurrentMood() { return currentMood; }
 
     @Override
-    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putString("mood", currentMood.name());
     }
 
     @Override
-    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if (tag.contains("mood")) currentMood = Mood.valueOf(tag.getString("mood"));
+        if (tag.contains("mood")) {
+            try {
+                currentMood = Mood.valueOf(tag.getString("mood").orElse("NEUTRAL"));
+            } catch (Exception e) {
+                currentMood = Mood.NEUTRAL;
+            }
+        }
     }
 }

@@ -22,10 +22,14 @@ public class BlobClientMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         GeckoLib.initialize();
-        EntityRendererRegistry.register(BlobBuddyMod.BLOB_ENTITY, BlobEntityRenderer::new);
+        EntityRendererRegistry.register(BlobBuddyMod.BLOB_ENTITY,
+            ctx -> new BlobEntityRenderer(ctx));
 
-        talkKey = new KeyMapping("key.blob-buddy.talk",
-            GLFW.GLFW_KEY_V, "key.categories.misc");
+        talkKey = new KeyMapping(
+            "key.blob-buddy.talk",
+            GLFW.GLFW_KEY_V,
+            KeyMapping.Category.MISC
+        );
 
         ClientPlayNetworking.registerGlobalReceiver(
             BlobPackets.AIResponsePacket.TYPE,
