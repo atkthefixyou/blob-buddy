@@ -11,19 +11,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class BlobEntity extends PathfinderMob implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private static final RawAnimation ANIM_IDLE    = RawAnimation.begin().thenLoop("animation.blob.idle");
-    private static final RawAnimation ANIM_HAPPY   = RawAnimation.begin().thenLoop("animation.blob.happy");
-    private static final RawAnimation ANIM_ANGRY   = RawAnimation.begin().thenLoop("animation.blob.angry");
-    private static final RawAnimation ANIM_SAD     = RawAnimation.begin().thenLoop("animation.blob.sad");
-    private static final RawAnimation ANIM_EXCITED = RawAnimation.begin().thenLoop("animation.blob.excited");
-
+public class BlobEntity extends PathfinderMob {
     private Mood currentMood = Mood.NEUTRAL;
     private String pendingResponse = null;
     private int angerTimer = 0;
@@ -39,22 +28,6 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
             .add(Attributes.ATTACK_DAMAGE, 5.0)
             .add(Attributes.FOLLOW_RANGE, 16.0);
     }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>("mood_controller", state ->
-            switch (currentMood) {
-                case HAPPY   -> state.setAndContinue(ANIM_HAPPY);
-                case ANGRY   -> state.setAndContinue(ANIM_ANGRY);
-                case SAD     -> state.setAndContinue(ANIM_SAD);
-                case EXCITED -> state.setAndContinue(ANIM_EXCITED);
-                default      -> state.setAndContinue(ANIM_IDLE);
-            }
-        ));
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() { return cache; }
 
     @Override
     public void tick() {

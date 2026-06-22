@@ -1,23 +1,28 @@
 package com.blobbuddy.entity;
 
 import com.blobbuddy.BlobBuddyMod;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class BlobEntityRenderer extends GeoEntityRenderer<BlobEntity> {
+public class BlobEntityRenderer extends MobRenderer<BlobEntity, LivingEntityRenderState, BlobEntityModel> {
+
+    public static final ModelLayerLocation LAYER =
+        new ModelLayerLocation(Identifier.of(BlobBuddyMod.MOD_ID, "blob"), "main");
+
     public BlobEntityRenderer(EntityRendererProvider.Context ctx) {
-        super(ctx, new BlobEntityModel());
+        super(ctx, new BlobEntityModel(ctx.bakeLayer(LAYER)), 0.4f);
     }
+
     @Override
-    public Identifier getTextureLocation(BlobEntity entity) {
-        String name = switch (entity.getCurrentMood()) {
-            case HAPPY   -> "blob_happy";
-            case ANGRY   -> "blob_angry";
-            case SAD     -> "blob_sad";
-            case EXCITED -> "blob_excited";
-            default      -> "blob_neutral";
-        };
-        return Identifier.of(BlobBuddyMod.MOD_ID, "textures/entity/" + name + ".png");
+    public Identifier getTextureLocation(LivingEntityRenderState state) {
+        return Identifier.of(BlobBuddyMod.MOD_ID, "textures/entity/blob_neutral.png");
+    }
+
+    @Override
+    public LivingEntityRenderState createRenderState() {
+        return new LivingEntityRenderState();
     }
 }
