@@ -18,7 +18,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    implementation "software.bernie.geckolib:geckolib-fabric:5.5.1"
+    implementation "com.geckolib:geckolib-fabric-26.1.2:5.5.1"
 }
 
 java {
