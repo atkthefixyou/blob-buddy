@@ -1,6 +1,11 @@
 package com.blobbuddy.entity;
 
 import com.blobbuddy.mood.Mood;
+import com.geckolib.animatable.GeoEntity;
+import com.geckolib.animatable.instance.AnimatableInstanceCache;
+import com.geckolib.animation.*;
+import com.geckolib.util.GeckoLibUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -9,10 +14,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class BlobEntity extends PathfinderMob implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -57,11 +58,11 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if (pendingResponse != null && !level().isClientSide) {
+        if (pendingResponse != null && !level().isClientSide()) {
             sendMessageNearby(pendingResponse);
             pendingResponse = null;
         }
-        if (currentMood == Mood.ANGRY && !level().isClientSide) {
+        if (currentMood == Mood.ANGRY && !level().isClientSide()) {
             if (++angerTimer > 40) { attackNearestPlayer(); angerTimer = 0; }
         }
     }
@@ -80,22 +81,22 @@ public class BlobEntity extends PathfinderMob implements GeoEntity {
     private void attackNearestPlayer() {
         Player nearest = level().getNearestPlayer(this, 8.0);
         if (nearest != null) {
-            doHurtTarget(nearest);
-            sendMessageNearby("ĐỒ NGỐC! Nhận đấm này đi!");
+            doHurtTarget(getServerLevel(), nearest);
+            sendMessageNearby("DO NGOC! Nhan dam nay di!");
         }
     }
 
     public Mood getCurrentMood() { return currentMood; }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
+    public void addAdditionalSaveData(CompoundTag tag, HolderLookup.Provider provider) {
+        super.addAdditionalSaveData(tag, provider);
         tag.putString("mood", currentMood.name());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        if (tag.contains("mood")) currentMood = Mood.valueOf(tag.getString("mood"));
+    public void readAdditionalSaveData(CompoundTag tag, HolderLookup.Provider provider) {
+        super.readAdditionalSaveData(tag, provider);
+        if (tag.contains("mood")) currentMood = Mood.valueOf(tag.getString("mood").orElse("NEUTRAL"));
     }
 }

@@ -1,15 +1,14 @@
 package com.blobbuddy.entity;
 
 import com.blobbuddy.BlobBuddyMod;
+import com.geckolib.renderer.GeoEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class BlobEntityRenderer extends GeoEntityRenderer<BlobEntity> {
     public BlobEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx, new BlobEntityModel());
     }
-
     @Override
     public ResourceLocation getTextureLocation(BlobEntity entity) {
         String name = switch (entity.getCurrentMood()) {
