@@ -23,7 +23,7 @@ public class BlobClientMod implements ClientModInitializer {
     public void onInitializeClient() {
         GeckoLib.initialize();
         EntityRendererRegistry.register(BlobBuddyMod.BLOB_ENTITY,
-            ctx -> new BlobEntityRenderer(ctx));
+            (EntityRendererProvider.Context ctx) -> new BlobEntityRenderer(ctx));
 
         talkKey = new KeyMapping(
             "key.blob-buddy.talk",

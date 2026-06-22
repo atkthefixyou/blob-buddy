@@ -2,7 +2,7 @@ package com.blobbuddy.entity;
 
 import com.blobbuddy.BlobBuddyMod;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class BlobEntityRenderer extends GeoEntityRenderer<BlobEntity> {
@@ -10,7 +10,7 @@ public class BlobEntityRenderer extends GeoEntityRenderer<BlobEntity> {
         super(ctx, new BlobEntityModel());
     }
     @Override
-    public ResourceLocation getTextureLocation(BlobEntity entity) {
+    public Identifier getTextureLocation(BlobEntity entity) {
         String name = switch (entity.getCurrentMood()) {
             case HAPPY   -> "blob_happy";
             case ANGRY   -> "blob_angry";
@@ -18,6 +18,6 @@ public class BlobEntityRenderer extends GeoEntityRenderer<BlobEntity> {
             case EXCITED -> "blob_excited";
             default      -> "blob_neutral";
         };
-        return ResourceLocation.fromNamespaceAndPath(BlobBuddyMod.MOD_ID, "textures/entity/" + name + ".png");
+        return Identifier.of(BlobBuddyMod.MOD_ID, "textures/entity/" + name + ".png");
     }
 }
