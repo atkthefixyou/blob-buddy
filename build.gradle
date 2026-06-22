@@ -8,20 +8,14 @@ group = project.maven_group
 
 repositories {
     mavenCentral()
-    maven {
-        name = 'GeckoLib'
-        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
-        content {
-            includeGroupByRegex("software\\.bernie.*")
-        }
-    }
+    maven { url 'https://cursemaven.com' }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     include implementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-    include implementation("software.bernie.geckolib:geckolib-fabric-${project.minecraft_version}:${project.geckolib_version}")
+    include implementation("curse.maven:geckolib-388172:7895315")
 }
 
 java {
