@@ -1,15 +1,20 @@
 package com.blobbuddy.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.blaze3d.systems.RenderSystem;
 
-public class BlobEntityModel extends EntityModel<EntityRenderState> {
+public class BlobEntityModel extends EntityModel<LivingEntityRenderState> {
     private final ModelPart body;
 
     public BlobEntityModel(ModelPart root) {
+        super(root);
         this.body = root.getChild("body");
     }
 
@@ -26,14 +31,7 @@ public class BlobEntityModel extends EntityModel<EntityRenderState> {
     }
 
     @Override
-    public void setupAnim(EntityRenderState state) {
+    public void setupAnim(LivingEntityRenderState state) {
         body.y = 19f + (float)(Math.sin(System.currentTimeMillis() / 500.0) * 0.5);
-    }
-
-    @Override
-    public void renderToBuffer(com.mojang.blaze3d.vertex.PoseStack poseStack,
-                               com.mojang.blaze3d.vertex.VertexConsumer buffer,
-                               int packedLight, int packedOverlay, int color) {
-        body.render(poseStack, buffer, packedLight, packedOverlay, color);
     }
 }

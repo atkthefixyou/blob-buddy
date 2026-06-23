@@ -1,8 +1,7 @@
 package com.blobbuddy.entity;
 
 import com.blobbuddy.mood.Mood;
-import net.minecraft.nbt.ValueInput;
-import net.minecraft.nbt.ValueOutput;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -63,17 +62,17 @@ public class BlobEntity extends PathfinderMob {
     public Mood getCurrentMood() { return currentMood; }
 
     @Override
-    public void saveAdditionalSaveData(ValueOutput output) {
-        super.saveAdditionalSaveData(output);
-        output.putString("mood", currentMood.name());
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putString("mood", currentMood.name());
     }
 
     @Override
-    public void loadAdditionalSaveData(ValueInput input) {
-        super.loadAdditionalSaveData(input);
-        input.readString("mood").ifPresent(s -> {
-            try { currentMood = Mood.valueOf(s); }
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("mood")) {
+            try { currentMood = Mood.valueOf(tag.getString("mood").orElse("NEUTRAL")); }
             catch (Exception e) { currentMood = Mood.NEUTRAL; }
-        });
+        }
     }
 }
