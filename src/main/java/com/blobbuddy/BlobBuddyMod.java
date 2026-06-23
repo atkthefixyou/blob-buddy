@@ -20,7 +20,7 @@ public class BlobBuddyMod implements ModInitializer {
     public void onInitialize() {
         var key = ResourceKey.create(
             BuiltInRegistries.ENTITY_TYPE.key(),
-            Identifier.of(MOD_ID, "blob")
+            new Identifier(MOD_ID, "blob")
         );
         BLOB_ENTITY = Registry.register(
             BuiltInRegistries.ENTITY_TYPE,

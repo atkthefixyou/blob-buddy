@@ -10,7 +10,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelLayerRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
@@ -22,11 +21,11 @@ public class BlobClientMod implements ClientModInitializer {
     private static int nearestBlobId = -1;
 
     private static final KeyMapping.Category TALK_CATEGORY =
-        KeyMapping.Category.register(Identifier.of(BlobBuddyMod.MOD_ID, "general"));
+        KeyMapping.Category.register(new Identifier(BlobBuddyMod.MOD_ID, "general"));
 
     @Override
     public void onInitializeClient() {
-        ModelLayerRegistry.registerModelLayer(
+        net.minecraft.client.model.geom.EntityModelSet.registerLayer(
             BlobEntityRenderer.LAYER, BlobEntityModel::createBodyLayer);
         EntityRendererRegistry.register(BlobBuddyMod.BLOB_ENTITY, BlobEntityRenderer::new);
 

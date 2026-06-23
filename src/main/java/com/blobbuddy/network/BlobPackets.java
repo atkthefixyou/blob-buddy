@@ -14,7 +14,7 @@ public class BlobPackets {
 
     public record VoiceTextPacket(int blobEntityId, String text) implements CustomPacketPayload {
         public static final Type<VoiceTextPacket> TYPE = new Type<>(
-            Identifier.of(BlobBuddyMod.MOD_ID, "voice_text"));
+            new Identifier(BlobBuddyMod.MOD_ID, "voice_text"));
         public static final StreamCodec<FriendlyByteBuf, VoiceTextPacket> CODEC = StreamCodec.of(
             (buf, pkt) -> { buf.writeInt(pkt.blobEntityId()); buf.writeUtf(pkt.text()); },
             buf -> new VoiceTextPacket(buf.readInt(), buf.readUtf()));
@@ -23,7 +23,7 @@ public class BlobPackets {
 
     public record AIResponsePacket(String text, String mood) implements CustomPacketPayload {
         public static final Type<AIResponsePacket> TYPE = new Type<>(
-            Identifier.of(BlobBuddyMod.MOD_ID, "ai_response"));
+            new Identifier(BlobBuddyMod.MOD_ID, "ai_response"));
         public static final StreamCodec<FriendlyByteBuf, AIResponsePacket> CODEC = StreamCodec.of(
             (buf, pkt) -> { buf.writeUtf(pkt.text()); buf.writeUtf(pkt.mood()); },
             buf -> new AIResponsePacket(buf.readUtf(), buf.readUtf()));
