@@ -61,18 +61,18 @@ public class BlobEntity extends PathfinderMob {
 
     public Mood getCurrentMood() { return currentMood; }
 
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
+    // Không override saveAdditionalSaveData vì API đổi sang ValueOutput
+    // Dùng serializeNBT thay thế
+    public void saveMoodToTag(CompoundTag tag) {
         tag.putString("mood", currentMood.name());
     }
 
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
+    public void loadMoodFromTag(CompoundTag tag) {
         if (tag.contains("mood")) {
-            try { currentMood = Mood.valueOf(tag.getString("mood").orElse("NEUTRAL")); }
-            catch (Exception e) { currentMood = Mood.NEUTRAL; }
+            try {
+                Object val = tag.get("mood");
+                if (val != null) currentMood = Mood.valueOf(val.toString());
+            } catch (Exception e) { currentMood = Mood.NEUTRAL; }
         }
     }
 }
