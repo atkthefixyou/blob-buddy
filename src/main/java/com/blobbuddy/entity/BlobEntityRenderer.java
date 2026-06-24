@@ -10,7 +10,7 @@ import net.minecraft.resources.Identifier;
 public class BlobEntityRenderer extends MobRenderer<BlobEntity, LivingEntityRenderState, BlobEntityModel> {
 
     public static final ModelLayerLocation LAYER = new ModelLayerLocation(
-        new Identifier(BlobBuddyMod.MOD_ID, "blob"), "main");
+        Identifier.fromNamespaceAndPath(BlobBuddyMod.MOD_ID, "blob"), "main");
 
     public BlobEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx, new BlobEntityModel(ctx.bakeLayer(LAYER)), 0.4f);
@@ -18,7 +18,7 @@ public class BlobEntityRenderer extends MobRenderer<BlobEntity, LivingEntityRend
 
     @Override
     public Identifier getTextureLocation(LivingEntityRenderState state) {
-        return new Identifier(BlobBuddyMod.MOD_ID, "textures/entity/blob_neutral.png");
+        return Identifier.fromNamespaceAndPath(BlobBuddyMod.MOD_ID, "textures/entity/blob_neutral.png");
     }
 
     @Override
