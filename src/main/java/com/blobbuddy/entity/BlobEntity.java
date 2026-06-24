@@ -31,12 +31,12 @@ public class BlobEntity extends PathfinderMob {
     @Override
     public void tick() {
         super.tick();
-        if (pendingResponse != null && level() instanceof ServerLevel) {
+        if (pendingResponse != null && !level().isClientSide) {
             sendMessageNearby(pendingResponse);
             pendingResponse = null;
         }
-        if (currentMood == Mood.ANGRY && level() instanceof ServerLevel sl) {
-            if (++angerTimer > 40) { attackNearestPlayer(sl); angerTimer = 0; }
+        if (currentMood == Mood.ANGRY && !level().isClientSide) {
+            if (++angerTimer > 40) { attackNearestPlayer(); angerTimer = 0; }
         }
     }
 
@@ -51,28 +51,28 @@ public class BlobEntity extends PathfinderMob {
             .forEach(p -> p.sendSystemMessage(Component.literal("\u00a7d[Blob] \u00a7f" + text)));
     }
 
-    private void attackNearestPlayer(ServerLevel sl) {
+    private void attackNearestPlayer() {
         Player nearest = level().getNearestPlayer(this, 8.0);
         if (nearest != null) {
-            doHurtTarget(sl, nearest);
+            doHurtTarget(nearest);
             sendMessageNearby("DO NGOC! Nhan dam nay di!");
         }
     }
 
     public Mood getCurrentMood() { return currentMood; }
 
-    // Không override saveAdditionalSaveData vì API đổi sang ValueOutput
-    // Dùng serializeNBT thay thế
-    public void saveMoodToTag(CompoundTag tag) {
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
         tag.putString("mood", currentMood.name());
     }
 
-    public void loadMoodFromTag(CompoundTag tag) {
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
         if (tag.contains("mood")) {
-            try {
-                Object val = tag.get("mood");
-                if (val != null) currentMood = Mood.valueOf(val.toString());
-            } catch (Exception e) { currentMood = Mood.NEUTRAL; }
+            try { currentMood = Mood.valueOf(tag.getString("mood")); }
+            catch (Exception e) { currentMood = Mood.NEUTRAL; }
         }
     }
 }
